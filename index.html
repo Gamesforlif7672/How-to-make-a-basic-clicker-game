@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mini Coding Space (Full HTML Support)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1e1e1e;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            background: #111;
+            color: #0f0;
+            border: 1px solid #444;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        #console {
+            width: 100%;
+            height: 180px;
+            background: #000;
+            color: #0f0;
+            border: 1px solid #444;
+            padding: 10px;
+            overflow-y: auto;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        iframe {
+            width: 100%;
+            height: 300px;
+            background: white;
+            border: 1px solid #444;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px 0;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Mini Coding Space</h1>
+<p>Write a FULL HTML document below:</p>
+
+<textarea id="code">
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test Page</title>
+</head>
+<body>
+<h1>Hello world</h1>
+<p>This is my coding space!</p>
+
+<script>
+console.log("Hello from inside the iframe");
+notAFunction(); // This will cause an error
+</script>
+
+</body>
+</html>
+</textarea>
+
+<button onclick="runCode()">Run Code</button>
+
+<h2>Console Output</h2>
+<div id="console"></div>
+
+<h2>Preview</h2>
+<iframe id="preview"></iframe>
+
+<script>
+function runCode() {
+    var code = document.getElementById("code").value;
+    var iframe = document.getElementById("preview");
+    var consoleBox = document.getElementById("console");
+
+    consoleBox.textContent = "";
+
+    // Create a blob containing the user's FULL HTML document
+    var fullHtml =
+        "<script>" +
+        "console.log = function(msg) {" +
+        "    parent.postMessage({type: 'log', message: String(msg)}, '*');" +
+        "};" +
+        "window.onerror = function(msg, url, line) {" +
+        "    parent.postMessage({type: 'error', message: msg + ' (line ' + line + ')'}, '*');" +
+        "};" +
+        "<\/script>" +
+        code;
+
+    var blob = new Blob([fullHtml], { type: "text/html" });
+    var url = URL.createObjectURL(blob);
+    iframe.src = url;
+}
+
+// Receive logs from iframe
+window.addEventListener("message", function(event) {
+    var consoleBox = document.getElementById("console");
+
+    if (event.data.type === "log") {
+        consoleBox.textContent += "[LOG] " + event.data.message + "\n";
+    }
+
+    if (event.data.type === "error") {
+        consoleBox.textContent += "[ERROR] " + event.data.message + "\n";
+    }
+
+    consoleBox.scrollTop = consoleBox.scrollHeight;
+});
+</script>
+
+</body>
+</html>
