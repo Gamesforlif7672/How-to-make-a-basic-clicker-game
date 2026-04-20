@@ -1,126 +1,300 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Mini Coding Space (Full HTML Support)</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>In-browser Clicker Game Code-along</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #1e1e1e;
-            color: white;
             margin: 0;
-            padding: 20px;
+            font-family: Inter, Arial, sans-serif;
+            background: #020617;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        header {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: #f8fafc;
+        }
+
+        .note {
+            color: #94a3b8;
+            font-size: 0.98rem;
+            margin: 0;
+        }
+
+        .lesson-overview {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 20px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            color: #cbd5e1;
+        }
+
+        .lesson-overview h2 {
+            margin: 0 0 12px;
+            color: #c7d2fe;
+            font-size: 1.2rem;
+        }
+
+        .lesson-overview ul {
+            margin: 12px 0 0;
+            padding-left: 1.4rem;
+        }
+
+        .lesson-overview li {
+            margin-bottom: 10px;
+        }
+
+        .workspace {
+            display: grid;
+            gap: 20px;
+        }
+
+        .panel {
+            background: #081029;
+            border: 1px solid #334155;
+            border-radius: 20px;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .panel-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: #c7d2fe;
+        }
+
+        .panel-body {
+            padding: 20px 24px 24px;
+        }
+
+        .editor-label {
+            display: block;
+            margin-bottom: 10px;
+            color: #cbd5e1;
+            font-weight: 600;
         }
 
         textarea {
             width: 100%;
-            height: 180px;
-            background: #111;
-            color: #0f0;
-            border: 1px solid #444;
-            padding: 10px;
-            font-family: monospace;
-            font-size: 14px;
+            min-height: 420px;
+            resize: vertical;
+            background: #020617;
+            color: #e2e8f0;
+            border: 1px solid #334155;
+            border-radius: 18px;
+            padding: 16px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            outline: none;
         }
 
-        #console {
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        button {
+            border: none;
+            border-radius: 14px;
+            padding: 12px 18px;
+            font-size: 0.98rem;
+            cursor: pointer;
+            transition: transform 0.1s ease, background 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        .run-btn {
+            background: #38bdf8;
+            color: #020617;
+        }
+
+        .reset-btn {
+            background: #fb7185;
+            color: white;
+        }
+
+        .preview {
             width: 100%;
-            height: 180px;
-            background: #000;
-            color: #0f0;
-            border: 1px solid #444;
-            padding: 10px;
-            overflow-y: auto;
-            font-family: monospace;
-            white-space: pre-wrap;
+            min-height: 520px;
+            border: 1px solid #334155;
+            border-radius: 18px;
+            overflow: hidden;
+            background: #010a18;
         }
 
         iframe {
             width: 100%;
-            height: 300px;
+            height: 520px;
+            border: none;
             background: white;
-            border: 1px solid #444;
         }
 
-        button {
-            padding: 10px 20px;
-            margin: 10px 0;
-            font-size: 16px;
-            cursor: pointer;
+        .console {
+            margin-top: 18px;
+            min-height: 120px;
+            background: #020617;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 16px;
+            color: #a5b4fc;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+            white-space: pre-wrap;
+            overflow-y: auto;
+        }
+
+        .help {
+            display: grid;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .help section {
+            background: #081229;
+            border: 1px solid #1e293b;
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        .help h3 {
+            margin-top: 0;
+            color: #c7d2fe;
+        }
+
+        .help p, .help li {
+            margin: 0 0 10px;
+            color: #cbd5e1;
+        }
+
+        .help ul {
+            padding-left: 1.4rem;
+        }
+
+        @media (min-width: 1000px) {
+            .workspace {
+                grid-template-columns: 1.2fr 0.8fr;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="page">
+        <header>
+            <h1>Learn to make a clicker game</h1>
+            <p class="note">This page is for first-time coders. Type or edit the code on the left, then press the button to see what changed on the right.</p>
+        </header>
 
-<h1>Mini Coding Space</h1>
-<p>Write a FULL HTML document below:</p>
+        <div class="lesson-overview">
+            <h2>How this lesson works</h2>
+            <p>We will build the clicker game in small steps. Each step explains one part of the page, then checks your code before moving on.</p>
+            <ul>
+                <li><strong>HTML</strong> creates the text and buttons you see on the page.</li>
+                <li><strong>JavaScript</strong> makes the buttons do things when you click them.</li>
+                <li><strong>The score</strong> is the number that grows when you click the button.</li>
+                <li><strong>The upgrade button</strong> spends points to make each click stronger.</li>
+                <li><strong>The reset button</strong> starts the game over.</li>
+            </ul>
+        </div>
 
-<textarea id="code">
-<!DOCTYPE html>
-<html>
-<head>
-<title>Test Page</title>
-</head>
-<body>
-<h1>Hello world</h1>
-<p>This is my coding space!</p>
+        <div class="panel">
+            <div class="panel-header">
+                <h2 id="stepTitle">Step-based clicker game tutorial</h2>
+            </div>
+            <div class="panel-body">
+                                <div class="note" style="margin-bottom: 10px;">
+                                    <strong>Don’t worry if you’ve never coded before!</strong> Each step will tell you exactly what to type. Just follow the instructions, copy the lines, and you’ll see your game come to life.
+                                </div>
+                                <p id="stepInstructions" class="note">Load the starter shell and complete the first step.</p>
+                <div class="console" id="stepFeedback">Follow the first step and press Run step.</div>
+            </div>
+        </div>
 
-<script>
-console.log("Hello from inside the iframe");
-notAFunction(); // This will cause an error
-</script>
+        <div class="workspace">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Coding Terminal</h2>
+                    <p class="note">Edit the HTML, CSS, and JavaScript for the clicker game right here.</p>
+                </div>
+                <div class="panel-body">
+                    <label class="editor-label" for="gameCode">Game code</label>
+                    <textarea id="gameCode"></textarea>
+                    <div class="button-row">
+                        <button class="run-btn" id="runButton">Run game</button>
+                        <button class="reset-btn" id="loadStarterButton">Load starter code</button>
+                    </div>
+                </div>
+            </div>
 
-</body>
-</html>
-</textarea>
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>DOM Display</h2>
+                    <p class="note">This preview shows the game as rendered by your code.</p>
+                </div>
+                <div class="panel-body">
+                    <div class="preview">
+                        <iframe id="preview"></iframe>
+                    </div>
+                    <div class="console" id="console"></div>
+                </div>
+            </div>
+        </div>
 
-<button onclick="runCode()">Run Code</button>
+        <div class="help">
+            <section>
+                <h3>How to code along</h3>
+                <ul>
+                    <li>Click <strong>Load starter code</strong> to get the beginning page structure.</li>
+                    <li>Read the step text at the top. It tells you exactly what to do next.</li>
+                    <li>Type the code written in the comments or the hint text.</li>
+                    <li>Click <strong>Run step</strong> to check if the step is finished.</li>
+                    <li>If it says the step is not complete, just follow the message and try again.</li>
+                </ul>
+            </section>
 
-<h2>Console Output</h2>
-<div id="console"></div>
+            <section>
+                <h3>What you can change</h3>
+                <p>The editor contains a page made of three parts:</p>
+                <ul>
+                    <li>HTML in the <code>&lt;body&gt;</code> section – this makes the game page and buttons.</li>
+                    <li>CSS in the <code>&lt;style&gt;</code> block – this changes how the game looks.</li>
+                    <li>JavaScript in the <code>&lt;script&gt;</code> block – this makes the buttons do things.</li>
+                </ul>
+                <p>For this lesson, follow the step text and use the starter comments as your guide.</p>
+            </section>
+        </div>
+    </div>
 
-<h2>Preview</h2>
-<iframe id="preview"></iframe>
-
-<script>
-function runCode() {
-    var code = document.getElementById("code").value;
-    var iframe = document.getElementById("preview");
-    var consoleBox = document.getElementById("console");
-
-    consoleBox.textContent = "";
-
-    // Create a blob containing the user's FULL HTML document
-    var fullHtml =
-        "<script>" +
-        "console.log = function(msg) {" +
-        "    parent.postMessage({type: 'log', message: String(msg)}, '*');" +
-        "};" +
-        "window.onerror = function(msg, url, line) {" +
-        "    parent.postMessage({type: 'error', message: msg + ' (line ' + line + ')'}, '*');" +
-        "};" +
-        "<\/script>" +
-        code;
-
-    var blob = new Blob([fullHtml], { type: "text/html" });
-    var url = URL.createObjectURL(blob);
-    iframe.src = url;
-}
-
-// Receive logs from iframe
-window.addEventListener("message", function(event) {
-    var consoleBox = document.getElementById("console");
-
-    if (event.data.type === "log") {
-        consoleBox.textContent += "[LOG] " + event.data.message + "\n";
-    }
-
-    if (event.data.type === "error") {
-        consoleBox.textContent += "[ERROR] " + event.data.message + "\n";
-    }
-
-    consoleBox.scrollTop = consoleBox.scrollHeight;
-});
-</script>
-
+    <script src="app.js"></script>
 </body>
 </html>
